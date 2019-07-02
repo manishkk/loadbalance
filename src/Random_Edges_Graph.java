@@ -56,7 +56,7 @@ public class Random_Edges_Graph
             totalLoad += Load.get(neighbours.get(i)-1);
         }
         // return (int) Math.round(totalLoad / (neighbourCount + 1)); // TODO: Remove Round
-        //System.out.println("Average Load on vertex "+ vertex + " is " +  totalLoad / (neighbourCount + 1));
+        System.out.println("Average Load on vertex "+ vertex + " is " +  totalLoad / (neighbourCount + 1));
         return totalLoad / (neighbourCount + 1); // TODO: Remove Round
     }
     
@@ -74,6 +74,7 @@ public class Random_Edges_Graph
     // share load to neighbours who have less load than average
     public void shareLoadToRecievers(int vertex, List<Integer> recievers, float load) {
         int recieversCount = recievers.size();
+     
         for (int i = 0; i < recieversCount; i++) {
             Load.set(recievers.get(i) - 1, Load.get(recievers.get(i) - 1) + load);
         }
@@ -138,26 +139,33 @@ public class Random_Edges_Graph
             while (iterationCount <= 1000) {
                 for (int vertex = 1; vertex <= v; vertex++) {
                 	float vertexLoad = Load.get(vertex - 1);
-
+                	List<Integer> MaxEdgeList = null;
                     List<Integer> edgeList = reg.getEdge(vertex);
                     System.out.println("Individual load at vertex " + vertex + " is: " + vertexLoad + " :neighbours: " + edgeList);
                     float averageLoad = reg.getAverageLoadOnVertex(vertex, edgeList);
                 	if (averageLoad < vertexLoad) {
-                		List<Integer> MaxEdgeList = reg.getEdge(vertex);
+                		MaxEdgeList = reg.getEdge(vertex);
                 		
                 	}
                     System.out.println("averageLoad " + averageLoad);
                     if (averageLoad < vertexLoad) {
                     	float loadToBeShared = vertexLoad - averageLoad;
                         System.out.println("loadToBeShared " + loadToBeShared);
-                        List<Integer> recievers = reg.getRecievers(edgeList, averageLoad);
-                         System.out.println("recievers " + recievers);
-                        if (recievers.size() > 0) {
-                        	float loadToBeSharedPerReciever = loadToBeShared / recievers.size();
-                            System.out.println("loadToBeSharedPerReciever " + loadToBeSharedPerReciever);
-                            reg.shareLoadToRecievers(vertex, recievers, loadToBeSharedPerReciever);
-                            Load.set(vertex - 1, vertexLoad - loadToBeSharedPerReciever * recievers.size());
-                        }
+                        List<Integer> recievers = reg.getRecievers(MaxEdgeList, averageLoad);
+                        //recievers.add(vertex);
+                        System.out.println("recievers other than me " + recievers);
+                       
+	                        if (recievers.size() > 0) {
+	                        	float loadToBeSharedPerReciever = loadToBeShared / (recievers.size()+1);
+	                        	
+
+	                            System.out.println("loadToBeSharedPerReciever " + loadToBeSharedPerReciever + "  on each node of S-min");
+	                        	
+	                           
+	                            //call this function when all proposals received 
+	                            reg.shareLoadToRecievers(vertex, recievers, loadToBeSharedPerReciever);
+	                            Load.set(vertex - 1, vertexLoad - loadToBeSharedPerReciever * recievers.size());
+	                        }
                     }
                 }
                 System.out.println("=====================================");
