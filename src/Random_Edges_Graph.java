@@ -1,4 +1,3 @@
-import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.Collections;
@@ -18,11 +17,16 @@ public class Random_Edges_Graph
     static int neighbors = 0;
     static float AverageLoad = 0;
 
+    /**
+     * @param v
+     */
     public Random_Edges_Graph(int v) {
         adjacencyList = new HashMap<Integer, List<Integer>>();
         for (int i = 1; i <= v; i++)
             adjacencyList.put(i, new LinkedList<Integer>());
     }
+    
+    //Add Random Edges
     public boolean setEdge(int to, int from) {
         if (to > adjacencyList.size() || from > adjacencyList.size())
             System.out.println("The vertices does not exists");
@@ -31,6 +35,7 @@ public class Random_Edges_Graph
         if (sls.contains(from) || dls.contains(to)) return false;
         sls.add(from);
         dls.add(to);
+        System.out.println("Edge exist from "+ from + " to "+ to);
         return true;
     }
     public List<Integer> getEdge(int to) {
@@ -40,25 +45,32 @@ public class Random_Edges_Graph
         }
         return adjacencyList.get(to);
     }
+    
     // return average load on vertex
+    int neighbourCount;
     public float getAverageLoadOnVertex(int vertex, List<Integer> neighbours){
-        int neighbourCount = neighbours.size();
+        neighbourCount = neighbours.size();
+        //System.out.println("Vertex " + vertex + " have "+neighbourCount + " neighbors " );
         float totalLoad = Load.get(vertex-1);
         for (int i = 0; i < neighbourCount; i++) {
             totalLoad += Load.get(neighbours.get(i)-1);
         }
         // return (int) Math.round(totalLoad / (neighbourCount + 1)); // TODO: Remove Round
+        //System.out.println("Average Load on vertex "+ vertex + " is " +  totalLoad / (neighbourCount + 1));
         return totalLoad / (neighbourCount + 1); // TODO: Remove Round
     }
+    
     // return vertices with less load than average
     public List<Integer> getRecievers(List<Integer> neighbours, float averageLoad) {
         int neighbourCount = neighbours.size();
         List<Integer> recievers = new LinkedList<Integer>();
         for (int i = 0; i < neighbourCount; i++) {
-            if (Load.get(neighbours.get(i)-1) < averageLoad) recievers.add(neighbours.get(i));
+            if (Load.get(neighbours.get(i)-1) < averageLoad) 
+            	recievers.add(neighbours.get(i));
         }
         return recievers;
     }
+    
     // share load to neighbours who have less load than average
     public void shareLoadToRecievers(int vertex, List<Integer> recievers, float load) {
         int recieversCount = recievers.size();
@@ -66,6 +78,7 @@ public class Random_Edges_Graph
             Load.set(recievers.get(i) - 1, Load.get(recievers.get(i) - 1) + load);
         }
     }
+    
     // check if graph is stabilized
     public boolean validateStabilization() {
         int vertexCount = Load.size();
@@ -125,18 +138,23 @@ public class Random_Edges_Graph
             while (iterationCount <= 1000) {
                 for (int vertex = 1; vertex <= v; vertex++) {
                 	float vertexLoad = Load.get(vertex - 1);
+
                     List<Integer> edgeList = reg.getEdge(vertex);
-                    // System.out.println("Individual load at vertex " + vertex + " is: " + vertexLoad + " :neighbours: " + edgeList);
+                    System.out.println("Individual load at vertex " + vertex + " is: " + vertexLoad + " :neighbours: " + edgeList);
                     float averageLoad = reg.getAverageLoadOnVertex(vertex, edgeList);
-                    // System.out.println("averageLoad " + averageLoad);
+                	if (averageLoad < vertexLoad) {
+                		List<Integer> MaxEdgeList = reg.getEdge(vertex);
+                		
+                	}
+                    System.out.println("averageLoad " + averageLoad);
                     if (averageLoad < vertexLoad) {
                     	float loadToBeShared = vertexLoad - averageLoad;
-                        // System.out.println("loadToBeShared " + loadToBeShared);
+                        System.out.println("loadToBeShared " + loadToBeShared);
                         List<Integer> recievers = reg.getRecievers(edgeList, averageLoad);
-                        // System.out.println("recievers " + recievers);
+                         System.out.println("recievers " + recievers);
                         if (recievers.size() > 0) {
                         	float loadToBeSharedPerReciever = loadToBeShared / recievers.size();
-                            // System.out.println("loadToBeSharedPerReciever " + loadToBeSharedPerReciever);
+                            System.out.println("loadToBeSharedPerReciever " + loadToBeSharedPerReciever);
                             reg.shareLoadToRecievers(vertex, recievers, loadToBeSharedPerReciever);
                             Load.set(vertex - 1, vertexLoad - loadToBeSharedPerReciever * recievers.size());
                         }
