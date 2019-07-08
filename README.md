@@ -2,4 +2,4 @@
 
 This is an initial version where nodes are accepting only single proposal.
 
-//TODO: Enhance for multiple proposal
+### Update: Working for multiple proposals.
