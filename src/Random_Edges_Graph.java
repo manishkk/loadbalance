@@ -113,7 +113,7 @@ public class Random_Edges_Graph
 //     float randomValue = ((Math.random()*((max-min)+1))+min);
 //     float roundOff = BigDecimal.valueOf(randomValue).setScale(3,RoundingMode.HALF_UP).doubleValue();
 //     return roundOff;
-    return (float) ((Math.random()*((max-min)+1))+min);
+    return (int) ((Math.random()*((max-min)+1))+min);
     }
 
     public static void main(String args[]) {
@@ -151,7 +151,8 @@ public class Random_Edges_Graph
             // System.out.println("The Adjacency List Representation of the random graph is as below: ");
             System.out.println("Maximum Value: " + Collections.max(Load));
             System.out.println("Minimum Value: " + Collections.min(Load));
-           
+            
+            MyTimerTask.completeTask();
             int iterationCount = 1;
             while (iterationCount <= 1000) {
             Map<String, List<Float>> nodePair=new HashMap<String, List<Float>>();
@@ -173,6 +174,7 @@ public class Random_Edges_Graph
                 MinEdgeList = reg.getEdge(vertex);
                
                 }
+                
 //**************Case 1*******************                
                     //System.out.println("averageLoad " + averageLoad);
                
@@ -248,6 +250,7 @@ public class Random_Edges_Graph
                     }
                    
                 }
+                MyTimerTask.completeTask();
                 //Iterate over the nodePair to distribute the minimum load to particular Node or Vertex! (Change according to urs)
                 Set<Map.Entry<String, List<Float>>> st= nodePair.entrySet();
                 for(Map.Entry<String, List<Float>> entry:st) {
@@ -278,6 +281,7 @@ public class Random_Edges_Graph
                 System.out.println("==========================================================================");
                 if (reg.validateStabilization()) break;
                 System.out.println("Load after iteration " + iterationCount + ": " + Load);
+                MyTimerTask.completeTask();
                 iterationCount++;
                 System.out.println("Maximum Value: " + Collections.max(Load));
                 System.out.println("Minimum Value: " + Collections.min(Load));
