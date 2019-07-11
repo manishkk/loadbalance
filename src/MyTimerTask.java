@@ -21,7 +21,7 @@ public class MyTimerTask extends TimerTask {
 
     public static void completeTask() {
     	tickNumber = (tickNumber)%3;
-        System.out.println("Timer Value: " +(tickNumber+1));
+        System.out.println("Stage Number: " +(tickNumber+1));
         tickNumber++;
     	
         try {
