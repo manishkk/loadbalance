@@ -1,56 +1,69 @@
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class MyTimerTask extends TimerTask {
-	private static int tickNumber;
+	private int tickNumber;
+	
+    private NetClient client = null;
     
     public MyTimerTask() {
     	tickNumber=0;
+    	new NetServer().launch();
+    	client = new NetClient();
     }
-    @Override
+   
+	@Override
     public void run() {
-        //System.out.println("Timer task started at:"+new Date());
-        //completeTask();
-        //System.out.println("Timer task finished at:"+new Date());
+       
         tickNumber = (tickNumber)%3;
-        System.out.println(tickNumber+1);
+        String timermsg = "Timer Value: " +(tickNumber+1);
+        System.out.println(timermsg);
+        if (client!=null) {
+        	String resp;
+			try {
+				resp = client.send(timermsg);
+				System.out.println(resp);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        	
+        }
+        
+        if (tickNumber==0) {
+        	Stage1();
+        	System.out.println("   Stage 1 ");
+        	
+        }
+        
+        if (tickNumber==1) {
+        	Stage2();
+        	System.out.println("   Stage 2 ");
+        }
+        
+        if (tickNumber==2) {
+        	Stage3();
+        	System.out.println("   Stage 3 ");
+        	
+        }
+        
         tickNumber++;
     }
 
-    public static void completeTask() {
-    	tickNumber = (tickNumber)%3;
-        System.out.println("Stage Number: " +(tickNumber+1));
-        tickNumber++;
-    	
-        try {
-            //assuming it takes 20 secs to complete the task
-            Thread.sleep(20000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
     
-    public static void main(String args[]){
-        TimerTask timerTask = new MyTimerTask();
-        //running timer task as daemon thread
-        Timer timer = new Timer(true);
-        timer.scheduleAtFixedRate(timerTask, 0, 2*1000);
-        System.out.println("TimerTask started");
-        //cancel after sometime
-        try {
-            Thread.sleep(120000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        timer.cancel();
-        System.out.println("TimerTask cancelled");
-        try {
-            Thread.sleep(30000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
+    private void Stage3() {
+		// TODO Auto-generated method stub
+		
+	}
+	private void Stage2() {
+		// TODO Auto-generated method stub
+		
+	}
+	private void Stage1() {
+		// TODO Auto-generated method stub
+		
+	}
 }

@@ -152,7 +152,7 @@ public class Random_Edges_Graph
             System.out.println("Maximum Value: " + Collections.max(Load));
             System.out.println("Minimum Value: " + Collections.min(Load));
             
-            MyTimerTask.completeTask();
+            new MyTimerTask();
             int iterationCount = 1;
             while (iterationCount <= 1000) {
             Map<String, List<Float>> nodePair=new HashMap<String, List<Float>>();
@@ -250,7 +250,7 @@ public class Random_Edges_Graph
                     }
                    
                 }
-                MyTimerTask.completeTask();
+                
                 //Iterate over the nodePair to distribute the minimum load to particular Node or Vertex! (Change according to urs)
                 Set<Map.Entry<String, List<Float>>> st= nodePair.entrySet();
                 for(Map.Entry<String, List<Float>> entry:st) {
@@ -281,7 +281,7 @@ public class Random_Edges_Graph
                 System.out.println("==========================================================================");
                 if (reg.validateStabilization()) break;
                 System.out.println("Load after iteration " + iterationCount + ": " + Load);
-                MyTimerTask.completeTask();
+               
                 iterationCount++;
                 System.out.println("Maximum Value: " + Collections.max(Load));
                 System.out.println("Minimum Value: " + Collections.min(Load));
