@@ -20,7 +20,6 @@ import java.util.Comparator;
 
 import static java.util.Map.Entry.*;
 
-//MinMax 
 public class MinMax {
 private Map<Integer, List<Integer>> adjacencyList;
 static List<Float> Load = new LinkedList<Float>();
@@ -93,10 +92,10 @@ MinMax minMaxGraph= new MinMax(v);
         while(!checkForBalance(minMaxGraph.adjacencyList,minMaxGraph.Load)) {
         //System.out.println("Not balanced");
        
-        while (iterationCount <= 100) {
-         System.out.println("Iteration_______________________________________________BEGIN"+iterationCount);
+        while (iterationCount <= 1000) {
+        //   System.out.println("Iteration_______________________________________________BEGIN"+iterationCount);
 for (int i = 0; i < minMaxGraph.adjacencyList.size(); i++) {
-System.out.println("Node with number:" +i);
+// System.out.println("Node with number:" +i);
 // Min Transfer
 Map<Integer, Float> sMin = new HashMap<>();
 // List<Integer> sMax=new LinkedList<>();
@@ -104,7 +103,7 @@ Map<Integer, Float> sMax = new HashMap<>();
 
 
 sMin = findSmin(minMaxGraph.adjacencyList, minMaxGraph.Load, minMaxGraph.Load.get(i).intValue());
-System.out.println("SMin list" + sMin);
+// System.out.println("SMin list" + sMin);
 
 int loadNode = (int) (minMaxGraph.Load.get(i).floatValue());
 int roundRobin = 0;
@@ -113,9 +112,9 @@ if (!sMin.isEmpty()) {
 Map.Entry<Integer, Float> entry = sMin.entrySet().iterator().next();
 int minLoad = (int) (entry.getValue().floatValue());
 
-int loadToTransfer = loadNode - minLoad - 1;
+int loadToTransfer = loadNode - minLoad + 1;
 
-System.out.println("Load to Transfer:" + loadToTransfer);
+// System.out.println("Load to Transfer:" + loadToTransfer);
 // Transfer load to S_min in RoundRobin
 
 while (loadToTransfer >= 0) {
@@ -126,7 +125,7 @@ Integer key = element.getKey();
 //int pos=(element.getKey().intValue()) - 1;
 
 Float maximum=Collections.max(minMaxGraph.Load);
-if(minMaxGraph.Load.get(key.intValue() - 1)+1==((maximum)-1)) {
+if(minMaxGraph.Load.get(key.intValue() - 1)+1==((maximum))) {
 break;
 }
 minMaxGraph.Load.set((element.getKey().intValue()) - 1,
@@ -142,12 +141,12 @@ roundRobin = 0;
 loadToTransfer = loadToTransfer - 1;
 }
 }
-System.out.println("Load after Min Transfer ******* " + minMaxGraph.Load);
+// System.out.println("Load after Min Transfer ******* " + minMaxGraph.Load);
 if(checkForBalance(minMaxGraph.adjacencyList,minMaxGraph.Load)) break;
 //minMaxGraph.Load.sort((o1,o2)->o1.compareTo(o2));  
 // SMAX
 sMax = findSmax(minMaxGraph.adjacencyList, minMaxGraph.Load, minMaxGraph.Load.get(i).intValue());
-System.out.println("SMax list" + sMax);
+// System.out.println("SMax list" + sMax);
 
 if (!sMax.isEmpty()) {
 
@@ -186,20 +185,20 @@ maxloadToTransfer = maxloadToTransfer - 1;
 
 }
 }
-System.out.println("Load after max Transfer ******* " + minMaxGraph.Load);
+// System.out.println("Load after max Transfer ******* " + minMaxGraph.Load);
 if(checkForBalance(minMaxGraph.adjacencyList,minMaxGraph.Load)) break;
 //list.sort((o1, o2) -> o1.compareToIgnoreCase(o2));
 //Sortng after each node
 
-minMaxGraph.Load.sort((o1,o2)->o1.compareTo(o2));
-System.out.println("After Iteration "+i+"  "+minMaxGraph.Load);
-System.out.println(minMaxGraph.Load);
+//minMaxGraph.Load.sort((o1,o2)->o1.compareTo(o2));
+// System.out.println("After Iteration "+i+"  "+minMaxGraph.Load);
+// System.out.println(minMaxGraph.Load);
 
 
 
 }
-
-System.out.println("Iteration_______________________________________________END"+iterationCount);
+System.out.println(minMaxGraph.Load);
+// System.out.println("Iteration_______________________________________________END"+iterationCount);
 iterationCount++;
 if(checkForBalance(minMaxGraph.adjacencyList,minMaxGraph.Load)) break;
         }
@@ -208,6 +207,7 @@ if(checkForBalance(minMaxGraph.adjacencyList,minMaxGraph.Load)) break;
         }
         System.out.println("**************************************");
         System.out.println("Balanced after:"+iterationCount);
+       // checkForBalance(minMaxGraph.adjacencyList,minMaxGraph.Load);
         System.out.println(minMaxGraph.Load);
 
 }
@@ -254,7 +254,7 @@ Map<Integer, Float> sorted = sminMap.entrySet()
 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
                        (oldValue, newValue) -> oldValue, LinkedHashMap::new));
 
-System.out.println(sminMap);
+//  System.out.println(sminMap);
 //System.out.println(sorted);
 return sorted;
 }
@@ -275,9 +275,10 @@ List<Float> sorted = load2.stream().sorted().collect(Collectors.toList());
        }
        HashSet<Integer> hashSet = new HashSet<>(differenceList);
       // System.out.println("Size of the hashSet "+size);
-       if(hashSet.size()<=1&&hashSet.iterator().next()==1||absoluteMatch) {
+       if((hashSet.size()<=2 && hashSet.stream().findFirst().get().intValue()==0 &&
+        hashSet.stream().skip(hashSet.stream().count() - 1).findFirst().get()==1)||absoluteMatch) {
         finalResult=true;
-        System.out.println("size:: "+hashSet.size()+"::::  Absloute Match"+absoluteMatch);
+        //System.out.println("size:: "+hashSet.size()+"::::  Absloute Match"+absoluteMatch);
         System.out.println("Graph is balanced now ");
        }
        
