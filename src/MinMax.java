@@ -14,10 +14,13 @@ import java.util.stream.Stream;
  
 import static java.util.stream.Collectors.*;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 
 import static java.util.Map.Entry.*;
 
+//MinMax 
 public class MinMax {
 private Map<Integer, List<Integer>> adjacencyList;
 static List<Float> Load = new LinkedList<Float>();
@@ -90,10 +93,10 @@ MinMax minMaxGraph= new MinMax(v);
         while(!checkForBalance(minMaxGraph.adjacencyList,minMaxGraph.Load)) {
         //System.out.println("Not balanced");
        
-        while (iterationCount <= 10) {
+        while (iterationCount <= 100) {
          System.out.println("Iteration_______________________________________________BEGIN"+iterationCount);
 for (int i = 0; i < minMaxGraph.adjacencyList.size(); i++) {
- System.out.println("Node with number:" +i);
+System.out.println("Node with number:" +i);
 // Min Transfer
 Map<Integer, Float> sMin = new HashMap<>();
 // List<Integer> sMax=new LinkedList<>();
@@ -101,7 +104,7 @@ Map<Integer, Float> sMax = new HashMap<>();
 
 
 sMin = findSmin(minMaxGraph.adjacencyList, minMaxGraph.Load, minMaxGraph.Load.get(i).intValue());
-//System.out.println("SMin list" + sMin);
+System.out.println("SMin list" + sMin);
 
 int loadNode = (int) (minMaxGraph.Load.get(i).floatValue());
 int roundRobin = 0;
@@ -110,7 +113,7 @@ if (!sMin.isEmpty()) {
 Map.Entry<Integer, Float> entry = sMin.entrySet().iterator().next();
 int minLoad = (int) (entry.getValue().floatValue());
 
-int loadToTransfer = loadNode - minLoad + 1;
+int loadToTransfer = loadNode - minLoad - 1;
 
 System.out.println("Load to Transfer:" + loadToTransfer);
 // Transfer load to S_min in RoundRobin
@@ -120,7 +123,12 @@ Set<Entry<Integer, Float>> entrySet = sMin.entrySet();
 Map.Entry<Integer, Float> element = (Map.Entry<Integer, Float>) entrySet
 .toArray()[roundRobin];
 Integer key = element.getKey();
+//int pos=(element.getKey().intValue()) - 1;
 
+Float maximum=Collections.max(minMaxGraph.Load);
+if(minMaxGraph.Load.get(key.intValue() - 1)+1==((maximum)-1)) {
+break;
+}
 minMaxGraph.Load.set((element.getKey().intValue()) - 1,
 minMaxGraph.Load.get(key.intValue() - 1) + 1);
 minMaxGraph.Load.set(i, minMaxGraph.Load.get(i) - 1);
@@ -135,10 +143,11 @@ loadToTransfer = loadToTransfer - 1;
 }
 }
 System.out.println("Load after Min Transfer ******* " + minMaxGraph.Load);
+if(checkForBalance(minMaxGraph.adjacencyList,minMaxGraph.Load)) break;
 //minMaxGraph.Load.sort((o1,o2)->o1.compareTo(o2));  
 // SMAX
 sMax = findSmax(minMaxGraph.adjacencyList, minMaxGraph.Load, minMaxGraph.Load.get(i).intValue());
-//System.out.println("SMax list" + sMax);
+System.out.println("SMax list" + sMax);
 
 if (!sMax.isEmpty()) {
 
@@ -147,7 +156,7 @@ int maxLoad = (int) (entryMax.getValue().floatValue());
 // int loadNode=(int)(minMaxGraph.Load.get(i).floatValue());
 int maxloadToTransfer = maxLoad - loadNode - 1;
 // max Load Transfer
-System.out.println("Load to Transfer:" + maxloadToTransfer);
+//System.out.println("Load to Transfer:" + maxloadToTransfer);
 roundRobin = 0;
 while (maxloadToTransfer >= 0) {
 
@@ -158,8 +167,10 @@ Map.Entry<Integer, Float> element = (Map.Entry<Integer, Float>) entrySet
 Integer key = element.getKey();
 
 // System.out.println(key);
-
-
+Float minimum=Collections.min(minMaxGraph.Load);
+if(minMaxGraph.Load.get(key.intValue() - 1) - 1==minimum) {
+break;
+}
 minMaxGraph.Load.set((element.getKey().intValue()) - 1,
 minMaxGraph.Load.get(key.intValue() - 1) - 1);
 minMaxGraph.Load.set(i, minMaxGraph.Load.get(i) + 1);
@@ -176,12 +187,13 @@ maxloadToTransfer = maxloadToTransfer - 1;
 }
 }
 System.out.println("Load after max Transfer ******* " + minMaxGraph.Load);
+if(checkForBalance(minMaxGraph.adjacencyList,minMaxGraph.Load)) break;
 //list.sort((o1, o2) -> o1.compareToIgnoreCase(o2));
 //Sortng after each node
 
 minMaxGraph.Load.sort((o1,o2)->o1.compareTo(o2));
 System.out.println("After Iteration "+i+"  "+minMaxGraph.Load);
-
+System.out.println(minMaxGraph.Load);
 
 
 
@@ -242,7 +254,7 @@ Map<Integer, Float> sorted = sminMap.entrySet()
 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
                        (oldValue, newValue) -> oldValue, LinkedHashMap::new));
 
-//System.out.println(sminMap);
+System.out.println(sminMap);
 //System.out.println(sorted);
 return sorted;
 }
